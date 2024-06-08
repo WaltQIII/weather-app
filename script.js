@@ -11,9 +11,16 @@ function fetchWeather(city) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
     fetch(url)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
+            return response.json();
+        })
         .then(data => displayWeather(data))
-        .catch(error => console.error('Error fetching weather:', error));
+        .catch(error => {
+            document.getElementById('weather-info').innerHTML = `<p>${error.message}</p>`;
+        });
 }
 
 function displayWeather(data) {
